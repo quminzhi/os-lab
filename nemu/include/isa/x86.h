@@ -3,7 +3,6 @@
 
 #include <common.h>
 
-
 // memory
 #define x86_IMAGE_START 0x100000
 #define x86_PMEM_BASE 0x0
@@ -19,22 +18,30 @@
 
 typedef struct {
   union {
-		uint32_t _32;
-		struct { 
-			uint16_t _pad;
-			union {
-				uint16_t _16;
-				uint8_t _8[2];
-			};
-		};
-  } gpr[8];
+    // little endian: 0x12345678 => 0x78 0x56 0x34 0x12
+    //                              ^
+    //                         start addr
+    // memory layout                         
+    //                             _8[0] _8[1]
+    //                             _16        _pad
+    //                             _32
+    union {
+      uint32_t _32;
+      struct {
+        union {
+          uint8_t _8[2];
+          uint16_t _16;
+        };
+        uint16_t _pad;
+      };
+    } gpr[8];
 
-  /* Do NOT change the order of the GPRs' definitions. */
-
-  /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
-   * in PA2 able to directly access these registers.
-   */
-  rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+    /* Do NOT change the order of the GPRs' definitions. */
+    /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
+     * in PA2 able to directly access these registers.
+     */
+    struct { rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi; };
+  };
 
   vaddr_t pc;
 } x86_CPU_state;
@@ -48,7 +55,8 @@ typedef struct {
   word_t moff;
 } x86_ISADecodeInfo;
 
-#define suffix_char(width) ((width) == 4 ? 'l' : ((width) == 1 ? 'b' : ((width) == 2 ? 'w' : '?')))
+#define suffix_char(width)                                                     \
+  ((width) == 4 ? 'l' : ((width) == 1 ? 'b' : ((width) == 2 ? 'w' : '?')))
 #define isa_vaddr_check(vaddr, type, len) (MEM_RET_OK)
 #define x86_has_mem_exception() (false)
 
