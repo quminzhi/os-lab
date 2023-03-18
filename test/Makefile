@@ -1,4 +1,4 @@
-BIN = cpu-state
+BIN = wait
 
 CC = gcc
 CFALGS = -O0 -g -Wall -Werror
