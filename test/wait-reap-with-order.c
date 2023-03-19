@@ -5,13 +5,9 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include "./include/csapp.h"
 
 #define N 16
-
-void unix_error(char *msg) {
-  fprintf(stderr, "%s: %s\n", msg, strerror(errno));
-  exit(0);
-}
 
 int main() {
   pid_t pid[N];
