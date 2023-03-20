@@ -1,4 +1,4 @@
-BIN = echoo
+BIN = sync-signal-sol
 
 CC = gcc
 CSAPP_INC = ./include
@@ -11,6 +11,7 @@ all: $(BIN)
 
 $(BIN): $(BIN).o $(CSAPP_SRC)/csapp.o
 	gcc $(LDFLAGS) -o $(BIN) $(BIN).o $(CSAPP_SRC)/csapp.o 
+
 $(BIN).o:
 	gcc -c $(CFLAGS) $(CCFLAGS) -o $(BIN).o $(BIN).c
 
