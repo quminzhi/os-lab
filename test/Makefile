@@ -1,4 +1,4 @@
-BIN = sync-signal-sol
+BIN = va-arg
 
 CC = gcc
 CSAPP_INC = ./include
